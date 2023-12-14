@@ -162,3 +162,5 @@ CACHES = {
         },
     }
 }
+
+PRIVATE_TOKEN = 'my-super-secret-token'
