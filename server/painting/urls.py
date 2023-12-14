@@ -21,6 +21,8 @@ urlpatterns = [
     path('api/requests/<int:request_id>/delete/', delete_request),  # DELETE
     path('api/requests/<int:request_id>/delete_expertise/<int:expertise_id>/', delete_expertise_from_request),  # DELETE
 
+    path('api/private/requests/<int:request_id>/update_request/', update_request_internal),  # PUT
+
     # Аутентификация
     path("api/register/", register, name="register"),
     path("api/login/", login, name="login"),

@@ -111,7 +111,7 @@ def delete_request(request, request_id):
     payload = get_jwt_payload(token)
     user_id = payload["user_id"]
 
-    if not Requests.objects.filter(pk=request_id).exists():
+    if not Requests.objects.filter(pk=request_id, user__pk=user_id).exists():
         return Response(f"Заявки с таким id не существует!")
 
     req = Requests.objects.get(pk=request_id)
@@ -136,4 +136,22 @@ def delete_expertise_from_request(request, request_id, expertise_id):
     req.save()
 
     serializer = ExpertiseSerializer(req.expertises, many=True)
+    return Response(serializer.data)
+
+@api_view(["PUT"])
+@permission_classes([IsInternal])
+def update_request_internal(request, request_id):
+    if not Requests.objects.filter(pk=request_id).exists():
+        return Response(f"Заявки с таким id не существует!", status=status.HTTP_404_NOT_FOUND)
+
+    request_status = request.data["req_status"]
+
+    if request_status in range(1, 6):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    req = Requests.objects.get(pk=request_id)
+    req.req_status = request_status
+    req.save()
+
+    serializer = RequestSerializer(req, many=False)
     return Response(serializer.data)

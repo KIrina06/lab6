@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from django.conf import settings
 
 from painting.jwt_helper import get_jwt_payload, get_access_token
 from painting.models import CustomUser
@@ -46,3 +47,8 @@ class IsModerator(BasePermission):
             return False
 
         return user.is_moderator
+
+class IsInternal(BasePermission):
+    def has_permission(self, request, view):
+        token = request.META.get('HTTP_TOKEN', '')
+        return token == settings.PRIVATE_TOKEN
