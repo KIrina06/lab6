@@ -146,7 +146,7 @@ def update_request_internal(request, request_id):
 
     request_status = request.data["req_status"]
 
-    if request_status in range(1, 6):
+    if request_status not in range(1, 6):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     req = Requests.objects.get(pk=request_id)
